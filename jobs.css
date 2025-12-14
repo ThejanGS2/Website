@@ -1,0 +1,127 @@
+/* --- Job & Freelancer Search Styles --- */
+
+.page-header {
+    background: white;
+    padding: 120px 0 60px;
+    margin-bottom: 60px;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+}
+
+.search-bar-container {
+    max-width: 700px;
+    margin: 30px auto 0;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 18px 30px;
+    padding-right: 140px;
+    border-radius: 50px;
+    border: 2px solid var(--accent-blue);
+    font-size: 1.1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    bottom: 8px;
+    padding: 0 30px;
+}
+
+/* Freelancer Cards */
+.freelancer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.freelancer-card {
+    text-align: center;
+}
+
+.freelancer-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.freelancer-name {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+}
+
+.freelancer-title {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.freelancer-rating {
+    color: #ffc107;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.freelancer-rate {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.skill-tag {
+    background: var(--accent-mint);
+    color: var(--text-main);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Post Job Form */
+.post-job-container {
+    max-width: 800px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h3 {
+    margin-bottom: 20px;
+    color: var(--primary);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.file-upload {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.file-upload:hover {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.5);
+}

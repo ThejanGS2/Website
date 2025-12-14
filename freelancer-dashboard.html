@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Nutzy Craft</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <img src="logo.jpg" alt="Logo" style="width: 40px; border-radius: 50%;">
+                Nutzy Craft
+            </a>
+
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link active">
+                        <i class="fa-solid fa-grid-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="find-freelancer.html" class="sidebar-link">
+                        <i class="fa-solid fa-briefcase"></i> Browse Jobs
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> My Proposals
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-solid fa-message"></i> Messages
+                        <span
+                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-solid fa-wallet"></i> Earnings
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="freelancer-profile.html" class="sidebar-link">
+                        <i class="fa-solid fa-user"></i> My Profile
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-user">
+                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                    style="width: 40px; height: 40px; border-radius: 50%;">
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
+                </div>
+                <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Topbar -->
+            <div class="dashboard-topbar">
+                <h1 class="dashboard-title">Good Morning, Sayur! ☀️</h1>
+                <div class="topbar-actions">
+                    <div class="search-bar-container" style="margin: 0; width: 300px;">
+                        <input type="text" class="search-input" placeholder="Search jobs..."
+                            style="padding: 10px 20px; font-size: 0.9rem;">
+                    </div>
+                    <button class="icon-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Rows -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #E3F2FD; color: #1565C0;">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Total Earnings</h4>
+                        <div class="stat-value">$12,450</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #E8F5E9; color: #2E7D32;">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Completed Jobs</h4>
+                        <div class="stat-value">28</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #FFF3E0; color: #E65100;">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Active Jobs</h4>
+                        <div class="stat-value">3</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #F3E5F5; color: #7B1FA2;">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Rating</h4>
+                        <div class="stat-value">5.0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Orders Table -->
+            <div class="dashboard-table-card">
+                <div class="table-header">
+                    <h3>Active Orders</h3>
+                    <a href="#" style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">View All</a>
+                </div>
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Project</th>
+                            <th>Deadline</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=random"
+                                        style="width: 30px; height: 30px; border-radius: 50%;">
+                                    John Doe
+                                </div>
+                            </td>
+                            <td>E-Commerce Redesign</td>
+                            <td style="color: #FF5252;">Today</td>
+                            <td>$1,200</td>
+                            <td><span class="status-badge-sm status-active">In Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="https://ui-avatars.com/api/?name=Sarah+Smith&background=random"
+                                        style="width: 30px; height: 30px; border-radius: 50%;">
+                                    Sarah Smith
+                                </div>
+                            </td>
+                            <td>Mobile App MVP</td>
+                            <td>Dec 20, 2025</td>
+                            <td>$850</td>
+                            <td><span class="status-badge-sm status-pending">Review</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="https://ui-avatars.com/api/?name=Mike+Ross&background=random"
+                                        style="width: 30px; height: 30px; border-radius: 50%;">
+                                    Mike Ross
+                                </div>
+                            </td>
+                            <td>Landing Page</td>
+                            <td>Dec 25, 2025</td>
+                            <td>$400</td>
+                            <td><span class="status-badge-sm status-active">In Progress</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Content Split -->
+            <div class="dashboard-split">
+                <!-- Recent Messages -->
+                <div class="dashboard-table-card">
+                    <div class="table-header">
+                        <h3>Recent Messages</h3>
+                    </div>
+                    <div class="message-list">
+                        <div class="message-item">
+                            <img src="https://ui-avatars.com/api/?name=John+Doe&background=random"
+                                class="message-avatar">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem;">John Doe</div>
+                                <div
+                                    style="font-size: 0.85rem; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
+                                    Hey Sayur, can we hop on a call?
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #aaa; margin-left: auto;">2m ago</div>
+                        </div>
+                        <div class="message-item">
+                            <img src="https://ui-avatars.com/api/?name=Anna+Lee&background=random"
+                                class="message-avatar">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem;">Anna Lee</div>
+                                <div style="font-size: 0.85rem; color: #888;">
+                                    Thanks for the update!
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #aaa; margin-left: auto;">1h ago</div>
+                        </div>
+                        <div class="message-item">
+                            <img src="https://ui-avatars.com/api/?name=Robert+K&background=random"
+                                class="message-avatar">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem;">Robert K.</div>
+                                <div style="font-size: 0.85rem; color: #888;">
+                                    Order #4221 has been marked complete.
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #aaa; margin-left: auto;">Yesterday</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Jobs -->
+                <div class="dashboard-table-card">
+                    <div class="table-header">
+                        <h3>Recommended</h3>
+                    </div>
+                    <div class="job-card-mini"
+                        style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f9f9f9;">
+                        <a href="post-job.html"
+                            style="font-weight: 700; color: var(--text-main); display: block; margin-bottom: 5px;">React
+                            Developer Needed</a>
+                        <div style="font-size: 0.8rem; color: #888;">Budget: $500 - $1k</div>
+                        <span class="skill-tag"
+                            style="font-size: 0.7rem; margin-top: 5px; display: inline-block;">React</span>
+                    </div>
+                    <div class="job-card-mini">
+                        <a href="post-job.html"
+                            style="font-weight: 700; color: var(--text-main); display: block; margin-bottom: 5px;">Java
+                            Backend Fix</a>
+                        <div style="font-size: 0.8rem; color: #888;">Budget: $200</div>
+                        <span class="skill-tag"
+                            style="font-size: 0.7rem; margin-top: 5px; display: inline-block;">Java</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+
+</html>

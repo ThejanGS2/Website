@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal & Trust | Nutzy Craft</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="content.css">
+</head>
+
+<body>
+    <nav class="navbar glass-panel">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.jpg" alt="Nutzy Craft Logo" class="logo-img">
+                Nutzy Craft
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="portfolio.html">Portfolio</a>
+                <a href="how-it-works.html">How it Works</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-hero">
+        <!-- Decorative Elements -->
+        <div class="hero-glow glow-1"></div>
+        <div class="hero-glow glow-2"></div>
+        <div class="container">
+            <h1 class="page-title">Legal & <span class="gradient-text">Trust</span></h1>
+            <p class="page-subtitle">Transparency and security are at the core of Nutzy Craft.</p>
+        </div>
+    </header>
+
+    <section class="content-section">
+        <div class="container">
+
+            <div class="legal-tabs">
+                <button class="legal-tab active" onclick="showTab('terms')">Terms & Conditions</button>
+                <button class="legal-tab" onclick="showTab('privacy')">Privacy Policy</button>
+                <button class="legal-tab" onclick="showTab('refund')">Refund Policy</button>
+            </div>
+
+            <div class="legal-content-box" id="legal-content">
+                <!-- Content injected via JS or simple hardcode for now -->
+                <div id="terms-content">
+                    <h3>Terms & Conditions</h3>
+                    <p>Welcome to Nutzy Craft. By accessing our platform, you agree to these legal terms.</p>
+                    <br>
+                    <h4>1. Usage</h4>
+                    <p>You must be at least 18 years old to use our services as a freelancer or client.</p>
+                    <br>
+                    <h4>2. Account Security</h4>
+                    <p>You are responsible for maintaining the confidentiality of your account credentials.</p>
+                    <br>
+                    <h4>3. Intellectual Property</h4>
+                    <p>All work delivered by freelancers belongs to the client upon full payment, unless otherwise
+                        agreed.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        function showTab(tab) {
+            const content = document.getElementById('legal-content');
+            const btns = document.querySelectorAll('.legal-tab');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'terms') {
+                content.innerHTML = `<h3>Terms & Conditions</h3>
+                    <p>Welcome to Nutzy Craft. By accessing our platform, you agree to these legal terms.</p>
+                    <br><h4>1. Usage</h4><p>You must be at least 18 years old to use our services as a freelancer or client.</p>
+                    <br><h4>2. Account Security</h4><p>You are responsible for maintaining the confidentiality of your account credentials.</p>
+                    <br><h4>3. Intellectual Property</h4><p>All work delivered by freelancers belongs to the client upon full payment, unless otherwise agreed.</p>`;
+            } else if (tab === 'privacy') {
+                content.innerHTML = `<h3>Privacy Policy</h3>
+                    <p>Your data privacy is our priority.</p>
+                    <br><h4>1. Data Collection</h4><p>We collect only necessary information to facilitate projects and payments.</p>
+                    <br><h4>2. Data Sharing</h4><p>We do not sell your personal data to third parties.</p>`;
+            } else if (tab === 'refund') {
+                content.innerHTML = `<h3>Refund & Dispute Policy</h3>
+                    <p>We ensure fair resolution for all parties.</p>
+                    <br><h4>1. Escrow Protection</h4><p>Funds are held securely until project completion.</p>
+                    <br><h4>2. Disputes</h4><p>In case of disagreement, our support team mediates based on the initial project scope.</p>`;
+            }
+        }
+    </script>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 All rights reserved by Nutzy Craft</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

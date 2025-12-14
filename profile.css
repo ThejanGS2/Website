@@ -1,0 +1,306 @@
+/* --- Freelancer Profile Page Styles --- */
+
+.profile-container {
+    padding-top: 100px;
+    /* Navbar space */
+    padding-bottom: 80px;
+}
+
+/* 1. Profile Header */
+.profile-header-card {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.profile-banner {
+    height: 200px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent-mint) 100%);
+    width: 100%;
+}
+
+.profile-header-content {
+    padding: 20px 40px 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 30px;
+    margin-top: -60px;
+    /* Overlap avatar */
+}
+
+.profile-avatar-large {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 6px solid white;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    background: white;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex-grow: 1;
+    padding-bottom: 10px;
+}
+
+.profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.badge-verified {
+    background: var(--accent-blue);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.profile-title {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-badge {
+    background: var(--accent-mint);
+    color: #2e7d32;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding-bottom: 15px;
+}
+
+/* Page Layout */
+.profile-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Sections */
+.profile-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+/* 4. Portfolio */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.portfolio-card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s;
+    background: var(--bg-card);
+}
+
+.portfolio-card:hover {
+    transform: translateY(-5px);
+}
+
+.portfolio-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.portfolio-content {
+    padding: 20px;
+}
+
+.portfolio-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+/* 5. Experience Timeline */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    border-left: 2px dashed #eee;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -36px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.timeline-role {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.timeline-company {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* 8. Pricing Packages */
+.pricing-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 5px;
+    border-radius: 50px;
+}
+
+.pricing-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.pricing-tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.package-details {
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #eee;
+}
+
+.price-display {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.package-features li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+
+.package-features i {
+    color: #4caf50;
+}
+
+/* 10. Trust Badges */
+.trust-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #eee;
+}
+
+.trust-badge.verified i {
+    color: #4caf50;
+}
+
+/* Responsive Profile */
+@media (max-width: 992px) {
+    .profile-grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: -80px;
+    }
+
+    .profile-name-row {
+        justify-content: center;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+}
