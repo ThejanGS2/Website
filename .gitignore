@@ -1,0 +1,11 @@
+target/
+.idea/
+*.iml
+.DS_Store
+*.class
+*.log
+*.jar
+*.war
+.vscode/
+# Exclude sensitive properties file if it contains secrets
+backend/src/main/resources/application.properties
