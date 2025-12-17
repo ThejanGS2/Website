@@ -11,6 +11,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+    <style>
+        .role-selection-cards {
+            display: flex;
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .role-card {
+            flex: 1;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-card.freelancer {
+            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+            border-color: var(--secondary);
+        }
+
+        .role-card.client {
+            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+            border-color: var(--primary);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,142 +87,33 @@
     </nav>
 
     <div class="auth-page">
-        <div class="glass-card auth-card">
+        <div class="glass-card auth-card" style="max-width: 800px;">
             <div class="auth-header">
-                <h2>Welcome Back!</h2>
-                <p>Login to continue your craft journey.</p>
+                <h2>Welcome to Nutzy Craft</h2>
+                <p>Choose your portal to continue</p>
             </div>
 
-            <form class="auth-form">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" placeholder="you@example.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" placeholder="Enter your password">
-                </div>
+            <div class="role-selection-cards">
+                <a href="freelancer-login.html" class="role-card freelancer">
+                    <div class="role-icon" style="color: var(--secondary);">
+                        <i class="fa-solid fa-paintbrush"></i>
+                    </div>
+                    <div class="role-title">Freelancer</div>
+                    <p class="role-desc">Find jobs, manage projects, and grow your career.</p>
+                </a>
 
-                <div class="auth-options">
-                    <label class="checkbox-container">
-                        <input type="checkbox">
-                        <span class="custom-checkbox"></span>
-                        Remember me
-                    </label>
-                    <a href="/forgot-password" style="color: var(--primary);">Forgot Password?</a>
-                </div>
-
-                <button type="button" class="btn btn-primary" id="login-btn">Log In</button>
-            </form>
-
-            <script>
-                // Auto-login check
-                window.addEventListener('DOMContentLoaded', async () => {
-                    const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
-                    if (email) {
-                        try {
-                            const response = await fetch(`/api/users/profile?email=${email}`);
-                            if (response.ok) {
-                                const user = await response.json();
-                                if (user.role === 'FREELANCER') {
-                                    window.location.href = "freelancer-dashboard.html";
-                                } else {
-                                    window.location.href = "client-dashboard.html";
-                                }
-                            }
-                        } catch (e) {
-                            console.error("Auto-login failed", e);
-                        }
-                    }
-                });
-
-                document.getElementById('login-btn').addEventListener('click', async () => {
-                    const inputs = document.querySelectorAll('.form-input');
-                    const email = inputs[0].value;
-                    const password = inputs[1].value;
-                    const rememberMe = document.querySelector('.checkbox-container input[type="checkbox"]').checked;
-
-                    if (!email || !password) {
-                        alert('Please enter email and password');
-                        return;
-                    }
-
-                    try {
-                        const response = await fetch('/api/auth/login', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email, password })
-                        });
-
-                        if (response.ok) {
-                            const user = await response.json();
-
-                            // Save email based on Remember Me
-                            if (rememberMe) {
-                                localStorage.setItem('loggedInEmail', email);
-                                sessionStorage.removeItem('loggedInEmail'); // Clear session to avoid conflicts
-                            } else {
-                                sessionStorage.setItem('loggedInEmail', email);
-                                localStorage.removeItem('loggedInEmail'); // Clear local to avoid persistence
-                            }
-
-                            // Redirect based on role
-                            if (user.role === 'FREELANCER') {
-                                window.location.href = "freelancer-dashboard.html";
-                            } else {
-                                window.location.href = "client-dashboard.html";
-                            }
-                        } else {
-                            alert('Invalid credentials or unverified email.');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Login failed');
-                    }
-                });
-            </script>
-
-            <div id="g_id_onload"
-                data-client_id="395279487546-l48b8apos5dpa0fctvltp6hhsfl10o83.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse">
+                <a href="client-login.html" class="role-card client">
+                    <div class="role-icon" style="color: var(--primary);">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div class="role-title">Client</div>
+                    <p class="role-desc">Post jobs, hire talent, and manage your business.</p>
+                </a>
             </div>
-            <div class="g_id_signin" data-type="standard"></div>
 
-            <script>
-                function handleCredentialResponse(response) {
-                    // For login, we don't send a role. The backend should identify the existing user.
-                    fetch("http://localhost:8080/api/auth/google", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ token: response.credential, role: null })
-                    })
-                        .then(res => {
-                            if (!res.ok) return res.json().then(err => { throw new Error(err.message || "Login failed") });
-                            return res.json();
-                        })
-                        .then(data => {
-                            localStorage.setItem('loggedInEmail', data.email);
-                            sessionStorage.removeItem('loggedInEmail'); // Clean session if using local
-
-                            if (data.role === 'FREELANCER') {
-                                window.location.href = "freelancer-dashboard.html";
-                            } else {
-                                window.location.href = "client-dashboard.html";
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            // If user not found (backend might throw 500 or 400 depending on impl, currently 500/RuntimeException usually), we should tell them to register.
-                            alert("Login failed. If you haven't registered yet, please Sign Up first.");
-                        });
-                }
-            </script>
-            <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-            <p style="margin-top: 20px;">Don't have an account? <a href="/register"
-                    style="color: var(--primary); font-weight: 700;">Sign Up</a></p>
-
-            <div style="margin-top: 20px; text-align: center;">
+            <div style="margin-top: 30px; text-align: center;">
+                <p style="margin-bottom: 10px;">New here? <a href="register.html"
+                        style="color: var(--primary); font-weight: 700;">Create an Account</a></p>
                 <a href="index.html"
                     style="color: var(--text-muted); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-arrow-left"></i> Return to Home Page

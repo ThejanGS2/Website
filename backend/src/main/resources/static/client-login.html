@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Login | Nutzy Craft</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <style>
+        .client-auth-card {
+            border-top: 5px solid var(--primary);
+        }
+
+        .client-badge {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar glass-panel">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.jpg" alt="Nutzy Craft Logo" class="logo-img">
+                Nutzy Craft
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="portfolio.html">Portfolio</a>
+                <a href="how-it-works.html">How it Works</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-secondary">Log In</a>
+                <a href="register.html" class="btn btn-primary">Join Now</a>
+            </div>
+            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="glass-card auth-card client-auth-card">
+            <div class="auth-header">
+                <span class="client-badge">CLIENT PORTAL</span>
+                <h2>Welcome Back!</h2>
+                <p>Login to manage your projects and hires.</p>
+            </div>
+
+            <form class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="Enter your password">
+                </div>
+
+                <div class="auth-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox">
+                        <span class="custom-checkbox"></span>
+                        Remember me
+                    </label>
+                    <a href="/forgot-password" style="color: var(--primary);">Forgot Password?</a>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="login-btn" style="width: 100%;">Log In as
+                    Client</button>
+            </form>
+
+            <script>
+                document.getElementById('login-btn').addEventListener('click', async () => {
+                    const inputs = document.querySelectorAll('.form-input');
+                    const email = inputs[0].value;
+                    const password = inputs[1].value;
+                    const rememberMe = document.querySelector('.checkbox-container input[type="checkbox"]').checked;
+
+                    if (!email || !password) {
+                        alert('Please enter email and password');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/api/auth/login/client', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password })
+                        });
+
+                        if (response.ok) {
+                            const user = await response.json();
+
+                            if (rememberMe) {
+                                localStorage.setItem('loggedInEmail', email);
+                                sessionStorage.removeItem('loggedInEmail');
+                            } else {
+                                sessionStorage.setItem('loggedInEmail', email);
+                                localStorage.removeItem('loggedInEmail');
+                            }
+
+                            window.location.href = "client-dashboard.html";
+                        } else {
+                            const err = await response.text();
+                            alert('Login failed: ' + (err || 'Invalid credentials or you are not a Client.'));
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Login failed');
+                    }
+                });
+            </script>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <p style="margin-bottom: 10px;">Not a Client? <a href="freelancer-login.html"
+                        style="color: var(--secondary); font-weight: 700;">Freelancer Login</a></p>
+                <a href="index.html"
+                    style="color: var(--text-muted); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Home Page
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

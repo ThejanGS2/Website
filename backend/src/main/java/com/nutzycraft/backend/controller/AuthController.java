@@ -51,6 +51,16 @@ public class AuthController {
         return authService.login(request.getEmail(), request.getPassword());
     }
 
+    @PostMapping("/login/freelancer")
+    public User loginFreelancer(@RequestBody com.nutzycraft.backend.dto.AuthDTOs.LoginRequest request) {
+        return authService.loginFreelancer(request.getEmail(), request.getPassword());
+    }
+
+    @PostMapping("/login/client")
+    public User loginClient(@RequestBody com.nutzycraft.backend.dto.AuthDTOs.LoginRequest request) {
+        return authService.loginClient(request.getEmail(), request.getPassword());
+    }
+
     @PostMapping("/forgot-password")
     public org.springframework.http.ResponseEntity<?> forgotPassword(
             @RequestBody com.nutzycraft.backend.dto.AuthDTOs.ForgotPasswordRequest request) {

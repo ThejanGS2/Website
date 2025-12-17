@@ -302,7 +302,13 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const email = localStorage.getItem('userEmail') || 'testfreelancer@example.com';
+            const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+
+            if (!email) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.html';
+                return;
+            }
 
             fetch(`http://localhost:8080/api/freelancers/me?email=${email}`)
                 .then(res => {
@@ -315,15 +321,22 @@
                     document.querySelector('.profile-name').innerHTML = `${user.fullName || 'Unknown'} <i class="fa-solid fa-pen" style="font-size: 0.9rem; color: #ccc; cursor: pointer;" onclick="window.location.href='settings.html'"></i>`;
                     document.querySelector('.profile-title').innerHTML = `${freelancer.title || 'Freelancer'} <i class="fa-solid fa-pen" style="font-size: 0.8rem; color: #ccc; cursor: pointer;" onclick="window.location.href='settings.html'"></i>`;
 
-                    // Simple logic to find specific elements or update by class since IDs are reused/missing in original template
-                    // Ideally, I should have added IDs to the HTML elements first, but I can use querySelector for unique-ish structure
+                    // Update Avatar
+                    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&size=200`;
+                    const avatarImg = document.querySelector('.profile-avatar-large');
+                    if (avatarImg) avatarImg.src = avatarUrl;
 
-                    const rateEl = document.querySelector('.profile-info .profile-actions') ? null : document.querySelector('.profile-info span[style*="font-size: 1.5rem"]');
+                    const sidebarAvatar = document.querySelector('.sidebar-user img');
+                    if (sidebarAvatar) sidebarAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&color=fff`;
+
+                    const sidebarName = document.querySelector('.sidebar-user div[style*="font-weight: 700"]');
+                    if (sidebarName) sidebarName.textContent = user.fullName || 'User';
+
+                    // Hourly Rate
+                    const rateEl = document.querySelector('.profile-info span[style*="font-size: 1.5rem"]');
                     if (rateEl) rateEl.innerHTML = `$${freelancer.hourlyRate || 0}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">/hr</span>`;
 
-                    document.querySelector('.profile-avatar-large').src = `https://ui-avatars.com/api/?name=${user.fullName}&background=random&size=200`;
-
-                    // About Me - assuming it's the first paragraph in profile-main
+                    // About Me
                     const aboutSection = document.querySelector('.profile-main .profile-section:nth-child(1) p');
                     if (aboutSection) aboutSection.innerText = freelancer.bio || 'No bio provided.';
 
@@ -337,7 +350,10 @@
                         skillsContainer.innerHTML += `<span class="skill-tag" style="border: 1px dashed #ccc; background: white; color: #888; cursor: pointer;" onclick="window.location.href='settings.html'">+ Add Skill</span>`;
                     }
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    // Optional: handle error state UI
+                });
         });
     </script>
 </body>

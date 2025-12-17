@@ -203,21 +203,22 @@
 
                     <div class="glass-card">
                         <h3 style="margin-bottom: 20px;">Contact Us</h3>
-                        <form onsubmit="event.preventDefault(); alert('Message sent! We will reply shortly.');">
+                        <form id="support-form">
                             <div style="margin-bottom: 15px;">
                                 <label style="display: block; font-weight: 700; margin-bottom: 8px;">Subject</label>
-                                <input type="text"
+                                <input type="text" id="subject" required
                                     style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;"
                                     placeholder="e.g. Payment Issue">
                             </div>
                             <div style="margin-bottom: 15px;">
                                 <label style="display: block; font-weight: 700; margin-bottom: 8px;">Message</label>
-                                <textarea
+                                <textarea id="message" required
                                     style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; min-height: 100px;"
                                     placeholder="Describe your issue..."></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
                         </form>
+                        <div id="support-message" style="margin-top: 10px; display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -232,6 +233,42 @@
                 const item = header.parentElement;
                 item.classList.toggle('active');
             });
+        });
+
+        // Support Form
+        document.getElementById('support-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+            if (!email) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const msgDiv = document.getElementById('support-message');
+
+            try {
+                const res = await fetch(`/api/support?userEmail=${encodeURIComponent(email)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject, message })
+                });
+
+                if (res.ok) {
+                    msgDiv.style.display = 'block';
+                    msgDiv.style.color = 'green';
+                    msgDiv.textContent = 'Message sent successfully! We will contact you soon.';
+                    document.getElementById('support-form').reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (err) {
+                msgDiv.style.display = 'block';
+                msgDiv.style.color = 'red';
+                msgDiv.textContent = 'Failed to send message. Please try again.';
+                console.error(err);
+            }
         });
     </script>
 

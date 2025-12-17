@@ -18,8 +18,6 @@ import java.util.UUID;
 @Service
 public class AuthService {
 
-
-
     @Autowired
     private UserRepository userRepository;
 
@@ -123,6 +121,22 @@ public class AuthService {
             }
         }
         throw new RuntimeException("Invalid credentials");
+    }
+
+    public User loginFreelancer(String email, String password) {
+        User user = login(email, password);
+        if (user.getRole() != User.Role.FREELANCER) {
+            throw new RuntimeException("User is not a Freelancer");
+        }
+        return user;
+    }
+
+    public User loginClient(String email, String password) {
+        User user = login(email, password);
+        if (user.getRole() != User.Role.CLIENT) {
+            throw new RuntimeException("User is not a Client");
+        }
+        return user;
     }
 
     public void forgotPassword(String email) {
