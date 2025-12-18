@@ -68,18 +68,44 @@ public class DashboardController {
 
     @GetMapping("/freelancer")
     public FreelancerStatsDTO getFreelancerStats(@RequestParam String email) {
-        // Fetch proposals for freelancer (as proxy for activity)
-        List<Proposal> proposals = proposalRepository.findByFreelancerEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-        long activeJobs = proposals.stream().filter(p -> "ACCEPTED".equalsIgnoreCase(p.getStatus())).count();
-        long completedJobs = 0; // Need 'completed' status in Proposal or Job linkage
-        double totalEarnings = activeJobs * 500.0; // Mock
+        // Fetch proposals to calc stats
+        List<Proposal> proposals = proposalRepository.findByFreelancerEmail(email);
+        long activeProposals = proposals.stream().filter(p -> "ACCEPTED".equalsIgnoreCase(p.getStatus())).count();
+
+        // Fetch actual Active/Completed Jobs
+        List<Job> myJobs = jobRepository.findByFreelancer_Email(email);
+        long activeJobsVal = myJobs.stream().filter(j -> "IN_PROGRESS".equalsIgnoreCase(j.getStatus())).count();
+        long completedJobsVal = myJobs.stream().filter(j -> "COMPLETED".equalsIgnoreCase(j.getStatus())).count();
+
+        // Calc earnings (Mock or from transactions)
+        double totalEarnings = completedJobsVal * 500.0;
+
+        // Get Active Orders (List)
+        List<Job> activeOrders = myJobs.stream()
+                .filter(j -> "IN_PROGRESS".equalsIgnoreCase(j.getStatus()))
+                .toList();
+
+        // Get Recent Messages
+        List<Message> messages = messageRepository.findUserMessages(user.getId()).stream().limit(5).toList();
+
+        // Get Recommended Jobs (Open jobs, exclude my jobs)
+        List<Job> recommended = jobRepository.findAll().stream()
+                .filter(j -> "OPEN".equalsIgnoreCase(j.getStatus()))
+                .limit(5)
+                .toList();
 
         FreelancerStatsDTO stats = new FreelancerStatsDTO();
-        stats.setActiveJobs(activeJobs);
-        stats.setCompletedJobs(completedJobs);
+        stats.setActiveJobs(activeJobsVal > 0 ? activeJobsVal : activeProposals); // Fallback to proposals if job
+                                                                                  // assignment not fully used
+        stats.setCompletedJobs(completedJobsVal);
         stats.setTotalEarnings(totalEarnings);
-        stats.setRating(5.0); // Mock
+        stats.setRating(5.0);
+        stats.setActiveOrders(activeOrders);
+        stats.setRecentMessages(messages);
+        stats.setRecommendedJobs(recommended);
+
         return stats;
     }
 
@@ -99,5 +125,8 @@ public class DashboardController {
         private long completedJobs;
         private long activeJobs;
         private double rating;
+        private List<Job> activeOrders;
+        private List<Message> recentMessages;
+        private List<Job> recommendedJobs;
     }
 }

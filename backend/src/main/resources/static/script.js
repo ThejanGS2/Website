@@ -228,7 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (displayRole === 'Freelancer Inc') displayRole = null;
                         roleEl.textContent = displayRole || profile.role || 'User';
                     }
-                    if (imgEl) imgEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=D4B69D&color=fff`;
+                    if (imgEl) {
+                        if (profile.profileImage) {
+                            imgEl.src = profile.profileImage;
+                        } else {
+                            imgEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=D4B69D&color=fff`;
+                        }
+                    }
                 }
             }
         } catch (err) {

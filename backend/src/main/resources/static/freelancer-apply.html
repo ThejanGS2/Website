@@ -48,8 +48,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -70,10 +68,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Freelancer&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -87,7 +85,7 @@
                 <button class="sidebar-toggle-btn"><i class="fa-solid fa-bars"></i></button>
                 <div>
                     <h2 class="dashboard-title" style="font-size: 1.5rem;">Submit Proposal</h2>
-                    <p style="color: #666;">Apply specifically for "E-Commerce Website Development"</p>
+                    <p style="color: #666;" id="apply-job-header">Loading job info...</p>
                 </div>
             </div>
 
@@ -110,14 +108,14 @@
                             <div class="form-group">
                                 <label class="form-label"
                                     style="display: block; font-weight: 700; margin-bottom: 8px;">Bid Amount ($)</label>
-                                <input type="number" id="bid-amount" class="form-input" placeholder="1200"
+                                <input type="number" id="bid-amount" class="form-input" placeholder="e.g. 500"
                                     style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px;">
                             </div>
                             <div class="form-group">
                                 <label class="form-label"
                                     style="display: block; font-weight: 700; margin-bottom: 8px;">Delivery Time</label>
                                 <div style="display: flex; gap: 10px;">
-                                    <input type="number" id="delivery-time" class="form-input" placeholder="7"
+                                    <input type="number" id="delivery-time" class="form-input" placeholder="e.g. 7"
                                         style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 12px;">
                                     <select id="delivery-unit" class="form-select"
                                         style="width: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 12px; background: white;">
@@ -161,16 +159,34 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', async () => {
+                    const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+
+                    // 1. Fetch User Profile for Sidebar
+                    if (email) {
+                        try {
+                            const profileRes = await fetch(`/api/users/profile?email=${email}`);
+                            if (profileRes.ok) {
+                                const profile = await profileRes.json();
+                                const sidebarUserEl = document.querySelector('.sidebar-user div:nth-child(2)');
+                                if (sidebarUserEl) {
+                                    sidebarUserEl.innerHTML = `
+                                        <div style="font-weight: 700; font-size: 0.9rem;">${profile.fullName}</div>
+                                        <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
+                                    `;
+                                }
+                                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=D4B69D&color=fff`;
+                                const sidebarImg = document.querySelector('.sidebar-user img');
+                                if (sidebarImg) sidebarImg.src = avatarUrl;
+                            }
+                        } catch (e) { console.error("Error fetching profile:", e); }
+                    }
+
+                    // 2. Fetch Job Details
                     const urlParams = new URLSearchParams(window.location.search);
                     const jobId = urlParams.get('jobId');
 
                     if (jobId) {
-                        // Fetch job details to populate summary
                         try {
-                            // Ideally we have an endpoint for single job, or iterate getAll (inefficient but works for now as I didn't add findById endpoint explicitly in controller but Repo has it). 
-                            // Wait, JobController only has getAll and create. I should add findById or just fetch all and find in JS. Fetching all is easier for now without changing backend again, though less performant.
-                            // Actually, let's just create a quick endpoint in JobController? No, let's stick to plan. I'll fetch all and filter client side for now, or just assume the user came from find-jobs.
-                            // Better: I'll use the existing getAllJobs and filter.
                             const response = await fetch('/api/jobs');
                             if (response.ok) {
                                 const jobs = await response.json();
@@ -179,17 +195,23 @@
                                     document.getElementById('job-summary-title').textContent = job.title;
                                     document.getElementById('job-summary-description').textContent = job.description;
                                     document.getElementById('job-summary-budget').textContent = job.budget;
+                                    document.getElementById('apply-job-header').textContent = `Apply specifically for "${job.title}"`;
                                 }
                             }
-                        } catch (e) { console.error(e); }
+                        } catch (e) {
+                            console.error(e);
+                            document.getElementById('apply-job-header').textContent = "Job not found.";
+                        }
+                    } else {
+                        document.getElementById('apply-job-header').textContent = "No job specified.";
                     }
 
+                    // 3. Submit Proposal
                     document.getElementById('submit-proposal-btn').addEventListener('click', async () => {
                         const bidAmount = document.getElementById('bid-amount').value;
                         const deliveryTime = document.getElementById('delivery-time').value;
                         const deliveryUnit = document.getElementById('delivery-unit').value;
                         const coverLetter = document.getElementById('cover-letter').value;
-                        const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
 
                         if (!bidAmount || !deliveryTime || !coverLetter) {
                             alert('Please fill in all required fields');

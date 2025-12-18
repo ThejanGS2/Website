@@ -18,7 +18,10 @@ public class JobController {
     private com.nutzycraft.backend.repository.UserRepository userRepository;
 
     @GetMapping
-    public List<Job> getAllJobs() {
+    public List<Job> getAllJobs(@RequestParam(required = false) String search) {
+        if (search != null && !search.isEmpty()) {
+            return jobRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search);
+        }
         return jobRepository.findAll();
     }
 
