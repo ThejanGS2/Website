@@ -241,9 +241,13 @@ public class AuthService {
             clientRepository.findByUser(user).ifPresent(client -> {
                 dto.setCompanyName(client.getCompanyName());
                 dto.setIndustry(client.getIndustry());
+                dto.setProfileImage(client.getProfileImage());
+            });
+        } else if (user.getRole() == User.Role.FREELANCER) {
+            freelancerRepository.findByUser_Email(user.getEmail()).ifPresent(freelancer -> {
+                dto.setProfileImage(freelancer.getProfileImage());
             });
         }
-        // Add freelancer logic if needed
 
         return dto;
     }

@@ -49,8 +49,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -71,10 +69,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -90,7 +88,8 @@
                     <button class="sidebar-toggle-btn"><i class="fa-solid fa-bars"></i></button>
                     <div>
                         <h2 style="font-size: 1.5rem; margin: 0; line-height: 1.2;">Browse Jobs</h2>
-                        <p style="color: #666; font-size: 0.85rem; margin: 0;">45 new jobs for you</p>
+                        <p style="color: #666; font-size: 0.85rem; margin: 0;" id="job-count-label">Explore new
+                            opportunities</p>
                     </div>
                 </div>
 
@@ -118,54 +117,103 @@
             <script>
                 document.addEventListener('DOMContentLoaded', async () => {
                     const container = document.getElementById('job-listings-container');
+                    const searchInput = document.querySelector('.search-input');
+                    const searchBtn = document.querySelector('.search-btn');
 
-                    try {
-                        const response = await fetch('/api/jobs');
-                        if (response.ok) {
-                            const jobs = await response.json();
-
-                            if (jobs.length === 0) {
-                                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;">No jobs found.</div>';
-                                return;
+                    // 0. Fetch Profile for Sidebar
+                    const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+                    if (email) {
+                        try {
+                            const profileRes = await fetch(`/api/users/profile?email=${email}`);
+                            if (profileRes.ok) {
+                                const profile = await profileRes.json();
+                                const sidebarUserEl = document.querySelector('.sidebar-user div:nth-child(2)');
+                                if (sidebarUserEl) {
+                                    sidebarUserEl.innerHTML = `
+                                        <div style="font-weight: 700; font-size: 0.9rem;">${profile.fullName}</div>
+                                        <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
+                                    `;
+                                }
+                                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=D4B69D&color=fff`;
+                                const sidebarImg = document.querySelector('.sidebar-user img');
+                                if (sidebarImg) sidebarImg.src = avatarUrl;
                             }
-
-                            container.innerHTML = jobs.map(job => `
-                                <div class="glass-card" style="margin-bottom: 20px; display: flex; gap: 20px; align-items: start;">
-                                    <div class="job-icon"
-                                        style="background: #e0f2fe; color: var(--accent-blue); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
-                                        <i class="fa-solid fa-briefcase"></i>
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                            <h3 style="font-size: 1.2rem; margin: 0;">${job.title}</h3>
-                                            <span style="font-weight: 700; color: var(--primary);">$${job.budget}</span>
-                                        </div>
-                                        <p style="color: #666; font-size: 0.95rem; margin-bottom: 12px;">${job.description}</p>
-                
-                                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                                            <span class="skill-tag"
-                                                style="background: #f0f9ff; color: #0284c7; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${job.category}</span>
-                                            <span class="skill-tag"
-                                                style="background: #f0fdf4; color: #16a34a; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${job.duration}</span>
-                                        </div>
-                
-                                        <div
-                                            style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #888;">
-                                            <span><i class="fa-regular fa-clock"></i> Posted ${new Date(job.postedAt).toLocaleDateString()}</span>
-                                            <span><i class="fa-solid fa-location-dot"></i> Remote</span>
-                                        </div>
-                                    </div>
-                                    <a href="freelancer-apply.html?jobId=${job.id}" class="btn btn-primary"
-                                        style="padding: 8px 20px; height: fit-content; text-decoration: none;">Apply Now</a>
-                                </div>
-                            `).join('');
-                        } else {
-                            container.innerHTML = '<div style="text-align: center; color: red;">Failed to load jobs.</div>';
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        container.innerHTML = '<div style="text-align: center; color: red;">An error occurred.</div>';
+                        } catch (e) { console.error("Error fetching profile:", e); }
                     }
+
+                    async function fetchJobs(query = '') {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 40px; color: #888;">
+                                <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem;"></i>
+                                <p>Loading jobs...</p>
+                            </div>
+                        `;
+                        try {
+                            const url = query ? `/api/jobs?search=${encodeURIComponent(query)}` : '/api/jobs';
+                            const response = await fetch(url);
+                            if (response.ok) {
+                                const jobs = await response.json();
+
+                                if (jobs.length === 0) {
+                                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;">No jobs found.</div>';
+                                    document.getElementById('job-count-label').innerText = 'No jobs found';
+                                    return;
+                                }
+
+                                document.getElementById('job-count-label').innerText = `${jobs.length} new jobs for you`;
+
+                                container.innerHTML = jobs.map(job => `
+                                    <div class="glass-card" style="margin-bottom: 20px; display: flex; gap: 20px; align-items: start;">
+                                        <div class="job-icon"
+                                            style="background: #e0f2fe; color: var(--accent-blue); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                                <h3 style="font-size: 1.2rem; margin: 0;">${job.title}</h3>
+                                                <span style="font-weight: 700; color: var(--primary);">$${job.budget}</span>
+                                            </div>
+                                            <p style="color: #666; font-size: 0.95rem; margin-bottom: 12px;">${job.description}</p>
+                    
+                                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                                                <span class="skill-tag"
+                                                    style="background: #f0f9ff; color: #0284c7; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${job.category}</span>
+                                                <span class="skill-tag"
+                                                    style="background: #f0fdf4; color: #16a34a; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${job.duration}</span>
+                                            </div>
+                    
+                                            <div
+                                                style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #888;">
+                                                <span><i class="fa-regular fa-clock"></i> Posted ${new Date(job.postedAt).toLocaleDateString()}</span>
+                                                <span><i class="fa-solid fa-location-dot"></i> Remote</span>
+                                            </div>
+                                        </div>
+                                        <a href="freelancer-apply.html?jobId=${job.id}" class="btn btn-primary"
+                                            style="padding: 8px 20px; height: fit-content; text-decoration: none;">Apply Now</a>
+                                    </div>
+                                `).join('');
+                            } else {
+                                container.innerHTML = '<div style="text-align: center; color: red;">Failed to load jobs.</div>';
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            container.innerHTML = '<div style="text-align: center; color: red;">An error occurred.</div>';
+                        }
+                    }
+
+                    // Initial fetch
+                    await fetchJobs();
+
+                    // Search handlers
+                    searchBtn.addEventListener('click', () => {
+                        fetchJobs(searchInput.value.trim());
+                    });
+
+                    searchInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            fetchJobs(searchInput.value.trim());
+                        }
+                    });
                 });
             </script>
         </main>

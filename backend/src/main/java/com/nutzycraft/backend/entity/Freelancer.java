@@ -23,6 +23,12 @@ public class Freelancer {
 
     private Double hourlyRate;
 
+    @Column(columnDefinition = "TEXT")
+    private String profileImage;
+
+    @Column(columnDefinition = "TEXT")
+    private String bannerImage;
+
     @ElementCollection
     private List<String> skills;
 

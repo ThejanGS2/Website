@@ -14,4 +14,5 @@ public class UserProfileDTO {
 
     // Freelancer specific
     // Add fields here if/when needed
+    private String profileImage;
 }

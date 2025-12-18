@@ -3,7 +3,6 @@ package com.nutzycraft.backend.repository;
 import com.nutzycraft.backend.entity.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
@@ -18,4 +17,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @org.springframework.data.jpa.repository.Query("SELECT SUM(j.budget) FROM Job j WHERE j.status = :status")
     Double sumBudgetByStatus(@org.springframework.data.repository.query.Param("status") String status);
+
+    List<Job> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description);
+
+    List<Job> findByFreelancer_Email(String email);
 }

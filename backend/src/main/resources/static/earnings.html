@@ -48,8 +48,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -70,10 +68,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -102,7 +100,7 @@
                     </div>
                     <div class="stat-info">
                         <h3>Total Earnings</h3>
-                        <p class="stat-value">$12,450</p>
+                        <p class="stat-value">...</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -111,7 +109,7 @@
                     </div>
                     <div class="stat-info">
                         <h3>Available Balance</h3>
-                        <p class="stat-value">$2,800</p>
+                        <p class="stat-value">...</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -120,7 +118,7 @@
                     </div>
                     <div class="stat-info">
                         <h3>Pending Clearance</h3>
-                        <p class="stat-value">$1,500</p>
+                        <p class="stat-value">...</p>
                     </div>
                 </div>
             </div>
@@ -139,38 +137,86 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 15px;">Oct 28, 2025</td>
-                            <td style="font-weight: 600;">E-Commerce Redesign Project</td>
-                            <td>Payment</td>
-                            <td style="color: #16a34a; font-weight: 700;">+$1,500.00</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 15px;">Oct 20, 2025</td>
-                            <td style="font-weight: 600;">Withdrawal to Bank Account (**** 1234)</td>
-                            <td>Withdrawal</td>
-                            <td style="color: #dc2626; font-weight: 700;">-$2,500.00</td>
-                            <td><span class="status-badge status-active">Completed</span></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 15px;">Oct 15, 2025</td>
-                            <td style="font-weight: 600;">Blog Writing Milestone 1</td>
-                            <td>Payment</td>
-                            <td style="color: #16a34a; font-weight: 700;">+$300.00</td>
-                            <td><span class="status-badge status-active">Cleared</span></td>
-                        </tr>
+                        <!-- Transactions loaded via JS -->
                         <tr>
-                            <td style="padding: 15px;">Oct 10, 2025</td>
-                            <td style="font-weight: 600;">Mobile App UI Design</td>
-                            <td>Payment</td>
-                            <td style="color: #16a34a; font-weight: 700;">+$800.00</td>
-                            <td><span class="status-badge status-active">Cleared</span></td>
+                            <td colspan="5" style="text-align: center; padding: 20px;">Loading transactions...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </main>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+                    const tbody = document.querySelector('tbody');
+
+                    // Stat Elements
+                    const stats = document.querySelectorAll('.stat-value');
+
+                    if (email) {
+                        try {
+                            const res = await fetch(`/api/transactions?email=${email}`);
+                            if (res.ok) {
+                                const transactions = await res.json();
+
+                                // Calculate Stats
+                                let totalEarnings = 0;
+                                let pending = 0;
+                                let debits = 0;
+
+                                transactions.forEach(t => {
+                                    if (t.type === 'CREDIT') {
+                                        if (t.status === 'PROCESSED' || t.status === 'RECEIVED') {
+                                            totalEarnings += t.amount;
+                                        } else if (t.status === 'PENDING') {
+                                            pending += t.amount;
+                                        }
+                                    } else if (t.type === 'DEBIT' && t.status === 'PROCESSED') {
+                                        debits += t.amount;
+                                    }
+                                });
+
+                                const available = totalEarnings - debits;
+
+                                if (stats.length >= 3) {
+                                    stats[0].innerText = `$${totalEarnings.toFixed(2)}`;
+                                    stats[1].innerText = `$${available.toFixed(2)}`;
+                                    stats[2].innerText = `$${pending.toFixed(2)}`;
+                                }
+
+                                // Render Table
+                                if (transactions.length === 0) {
+                                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No transactions found.</td></tr>';
+                                } else {
+                                    tbody.innerHTML = transactions.map(t => {
+                                        const isCredit = t.type === 'CREDIT';
+                                        const color = isCredit ? '#16a34a' : '#dc2626';
+                                        const sign = isCredit ? '+' : '-';
+
+                                        let statusClass = 'status-pending'; // default
+                                        if (t.status === 'PROCESSED' || t.status === 'RECEIVED') statusClass = 'status-active';
+
+                                        return `
+                                       <tr style="border-bottom: 1px solid #f0f0f0;">
+                                           <td style="padding: 15px;">${new Date(t.date).toLocaleDateString()}</td>
+                                           <td style="font-weight: 600;">${t.description}</td>
+                                           <td>${t.type === 'CREDIT' ? 'Payment' : 'Withdrawal'}</td>
+                                           <td style="color: ${color}; font-weight: 700;">${sign}$${t.amount.toFixed(2)}</td>
+                                           <td><span class="status-badge ${statusClass}">${t.status}</span></td>
+                                       </tr>
+                                       `;
+                                    }).join('');
+                                }
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                });
+            </script>
+            </table>
+    </div>
+    </main>
     </div>
 
 </body>

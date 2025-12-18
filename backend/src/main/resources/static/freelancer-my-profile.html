@@ -97,8 +97,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -119,10 +117,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -164,17 +162,17 @@
 
                         <div class="profile-info">
                             <div class="profile-name-row">
-                                <h1 class="profile-name">Sayur Thejan <i class="fa-solid fa-pen"
+                                <h1 class="profile-name">Loading... <i class="fa-solid fa-pen"
                                         style="font-size: 0.9rem; color: #ccc; cursor: pointer;"
                                         onclick="window.location.href='settings.html'"></i></h1>
                                 <div class="badge-verified"><i class="fa-solid fa-check"></i></div>
                             </div>
-                            <p class="profile-title">Full-Stack Developer | UI/UX Designer <i class="fa-solid fa-pen"
+                            <p class="profile-title">... <i class="fa-solid fa-pen"
                                     style="font-size: 0.8rem; color: #ccc; cursor: pointer;"
                                     onclick="window.location.href='settings.html'"></i></p>
                             <div class="profile-meta">
-                                <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Colombo, Sri Lanka</div>
-                                <div class="meta-item"><i class="fa-solid fa-clock"></i> 3:45 PM Local Time</div>
+                                <div class="meta-item"><i class="fa-solid fa-location-dot"></i> ...</div>
+                                <div class="meta-item"><i class="fa-solid fa-clock"></i> ...</div>
                                 <div class="status-badge"><span
                                         style="width: 8px; height: 8px; background: #2e7d32; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
                                     Available</div>
@@ -203,17 +201,7 @@
                                     class="fa-solid fa-pen"></i></div>
                             <h3 class="section-title"><i class="fa-solid fa-user"></i> About Me</h3>
                             <p style="color: var(--text-muted); line-height: 1.8;">
-                                Hi! I'm Sayur, a passionate developer with over 5 years of experience building scalable
-                                web
-                                applications and intuitive user interfaces. I specialize in the Java Spring Boot
-                                ecosystem for
-                                backends and modern JavaScript frameworks like React for frontends.
-                                <br><br>
-                                I love turning complex problems into simple, beautiful solutions. Whether you need a
-                                robust MVP,
-                                a complete platform overhaul, or a high-converting landing page, I deliver clean,
-                                maintainable
-                                code on time.
+                                Loading bio...
                             </p>
                             <div style="margin-top: 20px; display: flex; gap: 20px;">
                                 <div><strong>languages:</strong> English (Fluent), Sinhala (Native)</div>
@@ -226,26 +214,8 @@
                             <div class="edit-btn" title="Add Project"><i class="fa-solid fa-plus"></i></div>
                             <h3 class="section-title"><i class="fa-solid fa-briefcase"></i> Portfolio</h3>
                             <div class="portfolio-grid">
-                                <div class="portfolio-card">
-                                    <div style="position: relative;">
-                                        <img src="https://via.placeholder.com/300x180/D4B69D/ffffff?text=E-Commerce+App"
-                                            class="portfolio-img">
-                                        <div class="edit-btn"
-                                            style="top: 5px; right: 5px; width: 25px; height: 25px; font-size: 0.8rem;">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </div>
-                                    </div>
-                                    <div class="portfolio-content">
-                                        <h4 class="portfolio-title">Nutzy Craft Marketplace</h4>
-                                        <p style="font-size: 0.9rem; color: var(--text-muted);">Full-stack development
-                                            of a
-                                            freelance platform with Spring Boot.</p>
-                                    </div>
-                                </div>
-
-                                <div class="timeline-company">Freelance</div>
-                                <p style="font-size: 0.95rem; color: #666;">Delivering custom web solutions for
-                                    international clients. Top Rated Plus on Nutzy Craft.</p>
+                                <!-- Portfolio loaded via JS -->
+                                <p style="color: #888;">...</p>
                             </div>
                         </div>
                     </div>
@@ -310,7 +280,7 @@
                 return;
             }
 
-            fetch(`http://localhost:8080/api/freelancers/me?email=${email}`)
+            fetch(`/api/freelancers/me?email=${email}`)
                 .then(res => {
                     if (!res.ok) throw new Error("Freelancer not found");
                     return res.json();
@@ -322,12 +292,31 @@
                     document.querySelector('.profile-title').innerHTML = `${freelancer.title || 'Freelancer'} <i class="fa-solid fa-pen" style="font-size: 0.8rem; color: #ccc; cursor: pointer;" onclick="window.location.href='settings.html'"></i>`;
 
                     // Update Avatar
-                    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&size=200`;
                     const avatarImg = document.querySelector('.profile-avatar-large');
-                    if (avatarImg) avatarImg.src = avatarUrl;
+                    if (avatarImg) {
+                        if (freelancer.profileImage) {
+                            avatarImg.src = freelancer.profileImage;
+                        } else {
+                            avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&size=200`;
+                        }
+                    }
+
+                    // Update Banner
+                    const bannerContainer = document.getElementById('banner-container');
+                    if (bannerContainer && freelancer.bannerImage) {
+                        bannerContainer.style.background = `url('${freelancer.bannerImage}') center/cover no-repeat`;
+                    } else if (bannerContainer) {
+                        bannerContainer.style.background = `linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)`; // Default
+                    }
 
                     const sidebarAvatar = document.querySelector('.sidebar-user img');
-                    if (sidebarAvatar) sidebarAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&color=fff`;
+                    if (sidebarAvatar) {
+                        if (freelancer.profileImage) {
+                            sidebarAvatar.src = freelancer.profileImage;
+                        } else {
+                            sidebarAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || 'User')}&background=random&color=fff`;
+                        }
+                    }
 
                     const sidebarName = document.querySelector('.sidebar-user div[style*="font-weight: 700"]');
                     if (sidebarName) sidebarName.textContent = user.fullName || 'User';

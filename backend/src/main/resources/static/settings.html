@@ -48,8 +48,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -70,10 +68,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -100,13 +98,13 @@
                             <label style="display: block; font-weight: 700; margin-bottom: 10px;">Profile Photo</label>
                             <div
                                 style="position: relative; overflow: hidden; border-radius: 50%; width: 100px; height: 100px; margin: 0 auto; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff&size=200"
+                                <img src="https://ui-avatars.com/api/?name=User&background=random&size=200"
                                     id="settings-avatar-preview" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <!-- <button class="btn btn-outline" type="button"
+                            <button class="btn btn-outline" type="button"
                                 style="margin-top: 10px; font-size: 0.8rem; padding: 5px 10px;"
                                 onclick="document.getElementById('settings-avatar-upload').click()">Change</button>
-                            <input type="file" id="settings-avatar-upload" hidden accept="image/*"> -->
+                            <input type="file" id="settings-avatar-upload" hidden accept="image/*">
                         </div>
                         <div style="flex: 1;">
                             <label style="display: block; font-weight: 700; margin-bottom: 8px;">Cover Image</label>
@@ -117,7 +115,13 @@
                                         style="font-size: 1.5rem; margin-bottom: 5px;"></i>
                                     <div>1200 x 300px recommended</div>
                                 </div>
+                                <img id="settings-cover-preview"
+                                    style="width: 100%; height: 100%; object-fit: cover; display: none;">
                             </div>
+                            <input type="file" id="settings-cover-upload" hidden accept="image/*"
+                                onchange="document.getElementById('settings-cover-placeholder').style.display='none'; document.getElementById('settings-cover-preview').style.display='block';">
+                            <button type="button" class="btn btn-outline" style="margin-top: 5px; width: 100%;"
+                                onclick="document.getElementById('settings-cover-upload').click()">Change Cover</button>
                         </div>
                     </div>
 
@@ -164,10 +168,15 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    const email = localStorage.getItem('userEmail') || 'testfreelancer@example.com';
+                    const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+
+                    if (!email) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
 
                     // Populate
-                    fetch(`http://localhost:8080/api/freelancers/me?email=${email}`)
+                    fetch(`/api/freelancers/me?email=${email}`)
                         .then(res => res.json())
                         .then(data => {
                             if (data) {
@@ -176,19 +185,58 @@
                                 document.getElementById('hourlyRate').value = data.hourlyRate || '';
                                 document.getElementById('bio').value = data.bio || '';
                                 document.getElementById('skills').value = (data.skills || []).join(', ');
-                                document.getElementById('settings-avatar-preview').src = `https://ui-avatars.com/api/?name=${data.user.fullName}&background=random&size=200`;
+                                document.getElementById('skills').value = (data.skills || []).join(', ');
+
+                                if (data.profileImage) {
+                                    document.getElementById('settings-avatar-preview').src = data.profileImage;
+                                } else {
+                                    document.getElementById('settings-avatar-preview').src = `https://ui-avatars.com/api/?name=${data.user.fullName}&background=random&size=200`;
+                                }
+
+                                if (data.bannerImage) {
+                                    document.getElementById('settings-cover-placeholder').style.display = 'none';
+                                    const coverPreview = document.getElementById('settings-cover-preview');
+                                    coverPreview.src = data.bannerImage;
+                                    coverPreview.style.display = 'block';
+                                }
                             }
                         })
                         .catch(err => console.error(err));
 
+                    // Helper to read file as Base64
+                    const toBase64 = file => new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    });
+
                     // Save
-                    document.getElementById('profileSettingsForm').addEventListener('submit', function (e) {
+                    document.getElementById('profileSettingsForm').addEventListener('submit', async function (e) {
                         e.preventDefault();
                         const fullName = document.getElementById('fullName').value;
                         const title = document.getElementById('profTitle').value;
                         const hourlyRate = document.getElementById('hourlyRate').value;
                         const bio = document.getElementById('bio').value;
                         const skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s);
+
+                        let profileImage = null;
+                        let bannerImage = null;
+
+                        const avatarInput = document.getElementById('settings-avatar-upload');
+                        if (avatarInput.files.length > 0) {
+                            profileImage = await toBase64(avatarInput.files[0]);
+                        } else if (document.getElementById('settings-avatar-preview').src.startsWith('data:')) {
+                            // Keep existing if it's already a data URL (though user might not have changed it, this logic is tricky. 
+                            // Better to only send if changed. But if we don't send it, does backend keep it? 
+                            // Backend code: if (updated.getProfileImage() != null) existing.set...
+                            // So if we send null, it keeps existing. Good.
+                        }
+
+                        const coverInput = document.getElementById('settings-cover-upload');
+                        if (coverInput.files.length > 0) {
+                            bannerImage = await toBase64(coverInput.files[0]);
+                        }
 
                         const payload = {
                             user: { fullName: fullName },
@@ -198,7 +246,10 @@
                             skills: skills
                         };
 
-                        fetch(`http://localhost:8080/api/freelancers/me?email=${email}`, {
+                        if (profileImage) payload.profileImage = profileImage;
+                        if (bannerImage) payload.bannerImage = bannerImage;
+
+                        fetch(`/api/freelancers/me?email=${email}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
@@ -206,6 +257,8 @@
                             .then(res => res.json())
                             .then(data => {
                                 alert("Profile updated successfully!");
+                                // Refresh to show changes if needed, or just let user stay
+                                window.location.reload();
                             })
                             .catch(err => {
                                 console.error(err);

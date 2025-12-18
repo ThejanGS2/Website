@@ -48,8 +48,6 @@
                 <li class="sidebar-item">
                     <a href="messages.html" class="sidebar-link">
                         <i class="fa-solid fa-message"></i> Messages
-                        <span
-                            style="margin-left: auto; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.75rem;">3</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -70,10 +68,10 @@
             </ul>
 
             <div class="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Sayur+Thejan&background=D4B69D&color=fff"
+                <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff"
                     style="width: 40px; height: 40px; border-radius: 50%;">
                 <div style="flex: 1;">
-                    <div style="font-weight: 700; font-size: 0.9rem;">Sayur Thejan</div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Loading...</div>
                     <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
                 </div>
                 <a href="logout.html" style="color: #888;"><i class="fa-solid fa-sign-out-alt"></i></a>
@@ -95,78 +93,11 @@
             </div>
 
             <div class="glass-card" style="padding: 0;">
-                <div class="notification-list">
-                    <!-- Notification Item 1 -->
-                    <div class="notification-item unread"
-                        style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 15px; align-items: start; background: #FFF9F5;">
-                        <div
-                            style="background: #E3F2FD; color: #1565C0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="fa-solid fa-briefcase"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 5px;">New Job Invitation
-                                <span
-                                    style="background: var(--primary); width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px;"></span>
-                            </div>
-                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;"><strong>John Doe</strong>
-                                invited you to apply for "E-Commerce Website Development".</p>
-                            <div style="font-size: 0.8rem; color: #999;">10 mins ago</div>
-                            <div style="margin-top: 10px;">
-                                <button class="btn btn-primary" style="padding: 6px 15px; font-size: 0.8rem;">View
-                                    Job</button>
-                                <button class="btn btn-outline"
-                                    style="padding: 6px 15px; font-size: 0.8rem;">Decline</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification Item 2 -->
-                    <div class="notification-item unread"
-                        style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 15px; align-items: start; background: #FFF9F5;">
-                        <div
-                            style="background: #E8F5E9; color: #2E7D32; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="fa-solid fa-money-bill-wave"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 5px;">Payment Received
-                                <span
-                                    style="background: var(--primary); width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px;"></span>
-                            </div>
-                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">You received
-                                <strong>$450.00</strong> for "Logo Design Project".
-                            </p>
-                            <div style="font-size: 0.8rem; color: #999;">2 hours ago</div>
-                        </div>
-                    </div>
-
-                    <!-- Notification Item 3 -->
-                    <div class="notification-item"
-                        style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 15px; align-items: start;">
-                        <div
-                            style="background: #F3E5F5; color: #7B1FA2; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 5px;">New Review</div>
-                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;"><strong>Sarah Smith</strong>
-                                gave you a 5-star rating!</p>
-                            <div style="font-size: 0.8rem; color: #999;">Yesterday</div>
-                        </div>
-                    </div>
-
-                    <!-- Notification Item 4 -->
-                    <div class="notification-item" style="padding: 20px; display: flex; gap: 15px; align-items: start;">
-                        <div
-                            style="background: #f5f5f5; color: #666; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="fa-solid fa-user-gear"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 5px;">Profile Completeness
-                            </div>
-                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">Add your portfolio skills to
-                                reach 100% profile strength.</p>
-                            <div style="font-size: 0.8rem; color: #999;">2 days ago</div>
-                        </div>
+                <div class="notification-list" id="notification-list">
+                    <!-- Loaded via JS -->
+                    <div style="padding: 40px; text-align: center; color: #888;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Loading notifications...</p>
                     </div>
                 </div>
             </div>
@@ -174,6 +105,107 @@
         </main>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const email = localStorage.getItem('loggedInEmail') || sessionStorage.getItem('loggedInEmail');
+
+            if (email) {
+                // 1. Fetch User Profile for Sidebar
+                try {
+                    const profileRes = await fetch(`/api/users/profile?email=${email}`);
+                    if (profileRes.ok) {
+                        const profile = await profileRes.json();
+                        const sidebarUserEl = document.querySelector('.sidebar-user div:nth-child(2)');
+                        if (sidebarUserEl) {
+                            sidebarUserEl.innerHTML = `
+                                <div style="font-weight: 700; font-size: 0.9rem;">${profile.fullName}</div>
+                                <div style="font-size: 0.8rem; color: #888;">Freelancer</div>
+                            `;
+                        }
+                        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=D4B69D&color=fff`;
+                        const sidebarImg = document.querySelector('.sidebar-user img');
+                        if (sidebarImg) sidebarImg.src = avatarUrl;
+                    }
+                } catch (e) { console.error("Error fetching profile:", e); }
+
+                // 2. Fetch Notifications
+                try {
+                    const res = await fetch(`/api/notifications?email=${email}`);
+                    if (res.ok) {
+                        const notifications = await res.json();
+                        renderNotifications(notifications);
+                    } else {
+                        throw new Error('Failed to fetch');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById('notification-list').innerHTML = `
+                         <div style="padding: 40px; text-align: center; color: #888;">
+                            <i class="fa-regular fa-bell-slash" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>No notifications.</p>
+                        </div>
+                    `;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function renderNotifications(notifications) {
+            const container = document.getElementById('notification-list');
+            container.innerHTML = '';
+
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: #888;">
+                        <i class="fa-regular fa-bell-slash" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>No new notifications.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            notifications.forEach(note => {
+                let iconClass = 'fa-bell';
+                let iconBg = '#E3F2FD';
+                let iconColor = '#1565C0';
+
+                // Simple heuristic for icons
+                if (note.title.toLowerCase().includes('money') || note.title.toLowerCase().includes('payment')) {
+                    iconClass = 'fa-money-bill-wave';
+                    iconBg = '#E8F5E9'; iconColor = '#2E7D32';
+                } else if (note.title.toLowerCase().includes('job')) {
+                    iconClass = 'fa-briefcase';
+                } else if (note.title.toLowerCase().includes('star') || note.title.toLowerCase().includes('review')) {
+                    iconClass = 'fa-star';
+                    iconBg = '#F3E5F5'; iconColor = '#7B1FA2';
+                }
+
+                const timeStr = new Date(note.timestamp).toLocaleString();
+
+                const item = document.createElement('div');
+                item.className = 'notification-item unread';
+                item.style.cssText = 'padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 15px; align-items: start; background: #FFF9F5;';
+
+                // Remove bg color if read (simplified for now as unread)
+
+                item.innerHTML = `
+                    <div style="background: ${iconBg}; color: ${iconColor}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid ${iconClass}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 5px;">${note.title}
+                            <span style="background: var(--primary); width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px;"></span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">${note.message}</p>
+                        <div style="font-size: 0.8rem; color: #999;">${timeStr}</div>
+                        ${note.actionLink ? `<div style="margin-top: 10px;"><a href="${note.actionLink}" class="btn btn-primary" style="padding: 6px 15px; font-size: 0.8rem; text-decoration: none;">View</a></div>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+    </script>
 </body>
 
 </html>
