@@ -151,41 +151,8 @@
             </script>
 
             <div class="social-login">
-                <div id="g_id_onload"
-                    data-client_id="395279487546-l48b8apos5dpa0fctvltp6hhsfl10o83.apps.googleusercontent.com"
-                    data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin" data-type="standard"></div>
 
-                <script>
-                    function handleCredentialResponse(response) {
-                        const roleSelect = document.getElementById('roleSelect');
-                        const role = roleSelect ? roleSelect.value.toUpperCase() : null;
 
-                        fetch("http://localhost:8080/api/auth/google", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ token: response.credential, role: role })
-                        })
-                            .then(res => {
-                                if (!res.ok) return res.json().then(err => { throw new Error(err.message || "Registration failed") });
-                                return res.json();
-                            })
-                            .then(data => {
-                                localStorage.setItem('loggedInEmail', data.email);
-                                if (data.role === 'FREELANCER') {
-                                    window.location.href = "freelancer-dashboard.html";
-                                } else {
-                                    window.location.href = "client-dashboard.html";
-                                }
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                alert("Google Sign-In Failed: " + err.message);
-                            });
-                    }
-                </script>
-                <script src="https://accounts.google.com/gsi/client" async defer></script>
 
                 <p style="margin-top: 20px;">Already have an account? <a href="/login"
                         style="color: var(--primary); font-weight: 700;">Log In</a></p>

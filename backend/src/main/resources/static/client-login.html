@@ -81,7 +81,45 @@
 
                 <button type="button" class="btn btn-primary" id="login-btn" style="width: 100%;">Log In as
                     Client</button>
+
             </form>
+
+            <div class="social-login" style="margin-top: 20px; text-align: center;">
+                <div id="g_id_onload"
+                    data-client_id="395279487546-l48b8apos5dpa0fctvltp6hhsfl10o83.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                    data-text="sign_in_with" data-size="large" data-logo_alignment="left" data-width="100%"></div>
+            </div>
+
+            <script>
+                function handleCredentialResponse(response) {
+                    fetch("/api/auth/google", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: response.credential, role: "CLIENT" })
+                    })
+                        .then(res => {
+                            if (!res.ok) return res.json().then(err => { throw new Error(err.message || "Login failed") });
+                            return res.json();
+                        })
+                        .then(data => {
+                            localStorage.setItem('loggedInEmail', data.email);
+                            // Ensure we redirect to client dashboard
+                            if (data.role === 'CLIENT') {
+                                window.location.href = "client-dashboard.html";
+                            } else {
+                                alert("This Google account is registered as a " + data.role + ". Please login via the " + (data.role === 'FREELANCER' ? 'Freelancer' : 'Client') + " portal.");
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Google Sign-In Failed: " + err.message);
+                        });
+                }
+            </script>
+            <script src="https://accounts.google.com/gsi/client" async defer></script>
 
             <script>
                 document.getElementById('login-btn').addEventListener('click', async () => {
